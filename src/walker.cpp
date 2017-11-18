@@ -37,15 +37,12 @@ void Walk::move_forward() {
 	forward.angular.y = 0;
 	forward.angular.z = 0;
 
-	ros::Rate loop_rate(1);
+	ros::Rate loop_rate(1);		// rate of publishing is 1 Hz
 	while (ros::ok()) {
 		move_pub.publish(forward);	// publish move forward command
 		ros::spinOnce();
 		loop_rate.sleep();
 	}
-
-
-
 
 
 }

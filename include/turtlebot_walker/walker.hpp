@@ -23,7 +23,7 @@ private:
 
 
 public:
-	Walk(double vel, double rot){};
+	Walk(double vel, double rot);
 	void move_forward();
 	void rotate();
 
