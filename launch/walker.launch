@@ -2,6 +2,15 @@
 
  <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" />
  <node name="walker" pkg="turtlebot_walker" type="walker" />
+
+ <arg name="baging" default="1"/>
 	
+<node
+ name="walker_record"
+ pkg="rosbag"
+ type="record"
+ args="-a -O walker.bag --duration=30 -x '/camera/(.*)'"
+ if="$(arg baging)"
+/>
 
 </launch>

@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 	Walk walker;	///< declare a object for class Walk
 	walker.set_initial_pose(-1, -1);	///< set up initial pose for turtlebot
 	walker.set_forward(0.2);	///< set up linear velocity when moving forward
-	walker.set_turn(-1.57);	///< set up angular velocity when hitting obstacles
+	walker.set_turn(-6.28);	///< set up angular velocity when hitting obstacles
 	walker.set_up_position();	///< locate turtlebot in desired location
 	walker.move();	///< move the turtlebot with a simple walk algorithm like roomba
 
