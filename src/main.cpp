@@ -13,8 +13,10 @@
 
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "walk_turtlebot");
-	Walk move(1,1);
-	move.move_forward();
+	Walk walker;
+	walker.set_forward(0.01, 0.02, 0);
+	walker.set_turn(0.157);
+	walker.move();
 
 }
 

@@ -1,6 +1,6 @@
 /*
  * @file walker.hpp
- * @brief
+ * @brief This file declares the class Walk for a simple walk algorithm
  * @author Shaotu Jia
  * @copyright Copyright (C) 2007 Free Software Foundation, Inc.
  * @details GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007
@@ -13,24 +13,22 @@
 
 #include<ros/ros.h>
 #include<geometry_msgs/Twist.h>
+#include <kobuki_msgs/BumperEvent.h>
 #include<memory>
 
 class Walk {
 private:
-	double vel = 0;	///< The velocity of turtlebot move forward
-	double rot = 0;	///< The angular velocity of rotation once the turtlebot collide.
-	//std::shared_ptr<ros::NodeHandle> nh;	///< nodehandle for class walk
-	ros::NodeHandle n;
-
+	geometry_msgs::Twist forward;	///< The velocity of turtlebot move forward
+	geometry_msgs::Twist turn;	///< The angular velocity of rotation once the turtlebot collide.
+	ros::NodeHandle n;	///< nodehandle for class walk
+	bool need_turn = false;
 
 public:
-	Walk(double vel, double rot);
-	void move_forward();
-	void rotate();
-
-
-
-
+	Walk();
+	void move();
+	void collision(const kobuki_msgs::BumperEvent::ConstPtr& bumper_state);
+	void set_forward(const double&, const double&, const double&);
+	void set_turn(const double&);
 };
 
 

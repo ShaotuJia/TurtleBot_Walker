@@ -1,6 +1,6 @@
 /*
  * @file walker.cpp
- * @brief
+ * @brief This file implements the class members for simple walker algorithm
  * @author Shaotu Jia
  * @copyright Copyright (C) 2007 Free Software Foundation, Inc.
  * @details GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007
@@ -10,37 +10,57 @@
 
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
+#include <kobuki_msgs/BumperEvent.h>
 #include <memory>
 #include "turtlebot_walker/walker.hpp"
+
 /**
- * @brief This constructor combine functions within the class to let turtlebot
- * move forward and turn once find obstacles
- * @param vel The linear velocity in x - direction
- * @param rot The angular velocity once find obstacles
+ * @brief
  */
-Walk::Walk(double vel, double rot):vel(vel),rot(rot){
-
-}
-
-void Walk::move_forward() {
-	//auto n = std::make_shared<ros::NodeHandle>();
-	//ros::NodeHandle n;
-	ros::Publisher move_pub = n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1000);
-
-
-	geometry_msgs::Twist forward;
-	geometry_msgs::Twist turn;
-
-	forward.linear.x = 2;
-	forward.linear.y = 0;
-	forward.linear.z = 0;
+void Walk::set_forward(const double& x, const double& y, const double& z) {
+	forward.linear.x = x;
+	forward.linear.y = y;
+	forward.linear.z = z;
 	forward.angular.x = 0;
 	forward.angular.y = 0;
 	forward.angular.z = 0;
+}
 
-	ros::Rate loop_rate(1);		// rate of publishing is 1 Hz
+void Walk::set_turn(const double& r) {
+	turn.linear.x = 0;
+	turn.linear.y = 0;
+	turn.linear.z = 0;
+	turn.angular.x = 0;
+	turn.angular.y = 0;
+	turn.angular.z = r;
+}
+
+void Walk::collision(const kobuki_msgs::BumperEvent::ConstPtr& bumper_state) {
+	auto state = bumper_state->state;
+	if (state == 0) {
+		need_turn = false;
+	} else {
+		need_turn = true;
+	}
+
+}
+
+void Walk::move() {
+
+	// publisher to publish velocity for turtlebot
+	ros::Publisher move_pub = n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1000);
+
+	// subscriber to listen to topic /mobile_base/events/bumper
+	ros::Subscriber bumper = n.subscribe("/mobile_base/events/bumper", 1000, &Walk::collision, this);
+
+
+	ros::Rate loop_rate(10);		// rate of publishing is 1 Hz
 	while (ros::ok()) {
-		move_pub.publish(forward);	// publish move forward command
+		if (need_turn) {
+			move_pub.publish(turn);	// publish move forward command
+		} else {
+			move_pub.publish(forward);	// publish rotate command
+		}
 		ros::spinOnce();
 		loop_rate.sleep();
 	}
