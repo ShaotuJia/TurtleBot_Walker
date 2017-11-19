@@ -15,7 +15,10 @@
 #include "turtlebot_walker/walker.hpp"
 
 /**
- * @brief
+ * @brief This function is the interface to set the velocity that moving turtlebot forward
+ * @param x The linear velocity in x-direction
+ * @param y The linear velocity in y-direction
+ * @param z The linear velocity in z-direction
  */
 void Walk::set_forward(const double& x, const double& y, const double& z) {
 	forward.linear.x = x;
@@ -26,6 +29,11 @@ void Walk::set_forward(const double& x, const double& y, const double& z) {
 	forward.angular.z = 0;
 }
 
+/**
+ * @brief This function is the interface to set the angular velocity of turtlebot
+ * when it needs to avoid obstacles
+ * @param r The angular velocity around z_direction
+ */
 void Walk::set_turn(const double& r) {
 	turn.linear.x = 0;
 	turn.linear.y = 0;
@@ -35,6 +43,10 @@ void Walk::set_turn(const double& r) {
 	turn.angular.z = r;
 }
 
+/**
+ * @brief This is a callback function to subscribe the topic /mobile_base/events/bumper
+ * @param bumper_state The message from subscribed topic
+ */
 void Walk::collision(const kobuki_msgs::BumperEvent::ConstPtr& bumper_state) {
 	auto state = bumper_state->state;
 	if (state == 0) {
@@ -45,6 +57,9 @@ void Walk::collision(const kobuki_msgs::BumperEvent::ConstPtr& bumper_state) {
 
 }
 
+/**
+ * @brief The function that moves turtlebot forward and rotate turtlebot once hitting obstacles
+ */
 void Walk::move() {
 
 	// publisher to publish velocity for turtlebot

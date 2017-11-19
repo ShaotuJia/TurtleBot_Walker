@@ -21,7 +21,7 @@ private:
 	geometry_msgs::Twist forward;	///< The velocity of turtlebot move forward
 	geometry_msgs::Twist turn;	///< The angular velocity of rotation once the turtlebot collide.
 	ros::NodeHandle n;	///< nodehandle for class walk
-	bool need_turn = false;
+	bool need_turn = false;	///< check whether turtlebot need to turn to avoid obstacle
 
 public:
 	Walk();
@@ -30,7 +30,6 @@ public:
 	void set_forward(const double&, const double&, const double&);
 	void set_turn(const double&);
 };
-
 
 
 
