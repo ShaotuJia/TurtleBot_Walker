@@ -42,6 +42,11 @@ void Walk::set_turn(const double& r) {
 	turn.angular.z = r;
 }
 
+/**
+ * @brief This function is the interface to set up the initial position of turtlebot
+ * @param x The position in x - direction
+ * @param y The position in y - direction
+ */
 void Walk::set_initial_pose(const double& x, const double& y) {
 	position.x = x;
 	position.y = y;
@@ -62,6 +67,37 @@ void Walk::collision(const kobuki_msgs::BumperEvent::ConstPtr& bumper_state) {
 }
 
 /**
+ * @brief The function is to set up the initial position of turtlebot in gazebo world
+ */
+void Walk::set_up_position() {
+	// Wait for service gazebo/set_model_state
+	ros::service::waitForService("gazebo/set_model_state");
+
+	// call service to set up the initial position of turtlebot
+	ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>\
+			("gazebo/set_model_state");
+
+	gazebo_msgs::SetModelState srv; // declare a service SetModelState
+
+	// define model name; here turtlebot is named "mobile_base"
+	srv.request.model_state.model_name = "mobile_base";
+
+	// define the relative coordinate of model; here only has translation.
+	srv.request.model_state.pose.position = position;
+
+	// define the reference coordinate(reference frame) for transformation
+	srv.request.model_state.reference_frame = "world";
+	client.call(srv);	// call service
+
+	// If service is called successfully send ROS_INFO; otherwise send ROS_ERROR
+	if (srv.response.success) {
+		ROS_INFO("Success to set up turtlebot position");
+	} else {
+		ROS_ERROR("Fail to set up turtlebot position");
+	}
+}
+
+/**
  * @brief The function that moves turtlebot forward and rotate turtlebot once hitting obstacles
  */
 void Walk::move() {
@@ -71,14 +107,6 @@ void Walk::move() {
 
 	// subscriber to listen to topic /mobile_base/events/bumper
 	ros::Subscriber bumper = n.subscribe("/mobile_base/events/bumper", 1000, &Walk::collision, this);
-
-	// call service to set up the initial position of turtlebot
-	ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>\
-			("gazebo/set_model_state");
-	gazebo_msgs::SetModelState srv;
-	srv.request.model_state.model_name = "mobile_base";
-	srv.request.model_state.pose.position = position;
-	client.call(srv);
 
 	ros::Rate loop_rate(10);		// rate of publishing is 1 Hz
 	while (ros::ok()) {

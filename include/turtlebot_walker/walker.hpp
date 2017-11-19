@@ -32,6 +32,7 @@ public:
 	void set_forward(const double&);
 	void set_turn(const double&);
 	void set_initial_pose(const double&, const double&);
+	void set_up_position();
 };
 
 
