@@ -19,7 +19,8 @@ class Walk {
 private:
 	double vel = 0;	///< The velocity of turtlebot move forward
 	double rot = 0;	///< The angular velocity of rotation once the turtlebot collide.
-	std::shared_ptr<ros::NodeHandle> nh;	///< nodehandle for class walk
+	//std::shared_ptr<ros::NodeHandle> nh;	///< nodehandle for class walk
+	ros::NodeHandle n;
 
 
 public:

@@ -24,7 +24,8 @@ Walk::Walk(double vel, double rot):vel(vel),rot(rot){
 
 void Walk::move_forward() {
 	//auto n = std::make_shared<ros::NodeHandle>();
-	ros::Publisher move_pub = nh->advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1000);
+	//ros::NodeHandle n;
+	ros::Publisher move_pub = n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1000);
 
 
 	geometry_msgs::Twist forward;
