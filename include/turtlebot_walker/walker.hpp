@@ -8,8 +8,8 @@
  * of this license document, but changing it is not allowed.
  */
 
-#ifndef TURTLEBOT_WALKER_INCLUDE_TURTLEBOT_WALKER_WALKER_HPP_
-#define TURTLEBOT_WALKER_INCLUDE_TURTLEBOT_WALKER_WALKER_HPP_
+#ifndef INCLUDE_TURTLEBOT_WALKER_WALKER_HPP_
+#define INCLUDE_TURTLEBOT_WALKER_WALKER_HPP_
 
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
@@ -37,4 +37,4 @@ public:
 
 
 
-#endif /* TURTLEBOT_WALKER_INCLUDE_TURTLEBOT_WALKER_WALKER_HPP_ */
+#endif  // INCLUDE_TURTLEBOT_WALKER_WALKER_HPP_
