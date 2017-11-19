@@ -11,10 +11,11 @@
 #ifndef TURTLEBOT_WALKER_INCLUDE_TURTLEBOT_WALKER_WALKER_HPP_
 #define TURTLEBOT_WALKER_INCLUDE_TURTLEBOT_WALKER_WALKER_HPP_
 
-#include<ros/ros.h>
-#include<geometry_msgs/Twist.h>
+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
 #include <kobuki_msgs/BumperEvent.h>
-#include<memory>
+#include <gazebo_msgs/SetModelState.h>
+#include <memory>
 
 class Walk {
 private:
@@ -22,13 +23,15 @@ private:
 	geometry_msgs::Twist turn;	///< The angular velocity of rotation once the turtlebot collide.
 	ros::NodeHandle n;	///< nodehandle for class walk
 	bool need_turn = false;	///< check whether turtlebot need to turn to avoid obstacle
+	geometry_msgs::Point position;
+
 
 public:
-	Walk();
 	void move();
 	void collision(const kobuki_msgs::BumperEvent::ConstPtr& bumper_state);
-	void set_forward(const double&, const double&, const double&);
+	void set_forward(const double&);
 	void set_turn(const double&);
+	void set_initial_pose(const double&, const double&);
 };
 
 

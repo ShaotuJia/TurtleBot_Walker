@@ -17,8 +17,9 @@
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "walk_turtlebot");	///< Initialize node with name "walk_turtlebot"
 	Walk walker;	///< declare a object for class Walk
-	walker.set_forward(0.01, 0.02, 0);	///< set up linear velocity when moving forward
-	walker.set_turn(0.157);	///< set up angular velocity when hitting obstacles
+	walker.set_initial_pose(10, 10);	///< set up initial pose for turtlebot
+	walker.set_forward(0.2);	///< set up linear velocity when moving forward
+	walker.set_turn(-1.57);	///< set up angular velocity when hitting obstacles
 	walker.move();	///< move the turtlebot with a simple walk algorithm like roomba
 
 }

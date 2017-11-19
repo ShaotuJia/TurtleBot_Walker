@@ -14,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   turtlebot_gazebo
   kobuki_msgs
+  roslaunch
+  gazebo_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -76,6 +78,7 @@ generate_messages(
    std_msgs
    geometry_msgs
    kobuki_msgs
+   gazebo_msgs
  )
 
 ################################################
@@ -158,7 +161,7 @@ include_directories(
 add_executable(walker src/main.cpp src/walker.cpp)
 target_link_libraries(walker ${catkin_LIBRARIES})
 add_dependencies(walker turtlebot_walker_generate_messages_cpp)
-
+roslaunch_add_file_check(launch)
 
 #############
 ## Install ##

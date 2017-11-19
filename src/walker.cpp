@@ -11,19 +11,18 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <kobuki_msgs/BumperEvent.h>
+#include <gazebo_msgs/SetModelState.h>
 #include <memory>
 #include "turtlebot_walker/walker.hpp"
 
 /**
  * @brief This function is the interface to set the velocity that moving turtlebot forward
- * @param x The linear velocity in x-direction
- * @param y The linear velocity in y-direction
- * @param z The linear velocity in z-direction
+ * @param x The linear velocity in forward direction
  */
-void Walk::set_forward(const double& x, const double& y, const double& z) {
+void Walk::set_forward(const double& x) {
 	forward.linear.x = x;
-	forward.linear.y = y;
-	forward.linear.z = z;
+	forward.linear.y = 0;
+	forward.linear.z = 0;
 	forward.angular.x = 0;
 	forward.angular.y = 0;
 	forward.angular.z = 0;
@@ -41,6 +40,11 @@ void Walk::set_turn(const double& r) {
 	turn.angular.x = 0;
 	turn.angular.y = 0;
 	turn.angular.z = r;
+}
+
+void Walk::set_initial_pose(const double& x, const double& y) {
+	position.x = x;
+	position.y = y;
 }
 
 /**
@@ -68,13 +72,21 @@ void Walk::move() {
 	// subscriber to listen to topic /mobile_base/events/bumper
 	ros::Subscriber bumper = n.subscribe("/mobile_base/events/bumper", 1000, &Walk::collision, this);
 
+	// call service to set up the initial position of turtlebot
+	ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>\
+			("gazebo/set_model_state");
+	gazebo_msgs::SetModelState srv;
+	srv.request.model_state.model_name = "mobile_base";
+	srv.request.model_state.pose.position = position;
+	client.call(srv);
 
 	ros::Rate loop_rate(10);		// rate of publishing is 1 Hz
 	while (ros::ok()) {
+
 		if (need_turn) {
-			move_pub.publish(turn);	// publish move forward command
+			move_pub.publish(turn);	// publish move rotate command
 		} else {
-			move_pub.publish(forward);	// publish rotate command
+			move_pub.publish(forward);	// publish forward command
 		}
 		ros::spinOnce();
 		loop_rate.sleep();
